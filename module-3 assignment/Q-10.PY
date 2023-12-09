@@ -1,4 +1,4 @@
-numbers = [10, 5, 8, 2, 7, 3, ]
+numbers = [10, 5, 8, 2, 7, 3, 1]
 
 min_value = min(numbers)
 
