@@ -1,101 +1,77 @@
-import random
+def game_Title():
+    print("\tWELCOME TO TOPS QUIZE GAMING CHALLENGE")
+    print(f"\tSelect your role :\n"
+          f"\t\t-> Quize Matser  (press 1)\n"
+          f"\t\t-> Quize Cracker  (press 2)")
+    user_role = int(input("Enter Your Role:"))
+    if user_role == 1:
+        game_menu()
+    else:
+        print("nothing")
 
-class QuizGame:
-    def __init__(self):
-        self.questions = {}
 
-    def display_menu(self):
-        print("\n===== Quiz Game Console Application =====")
-        print("1. Add Question")
-        print("2. View Questions")
-        print("3. Delete Question")
-        print("4. Play Game")
-        print("5. Exit")
+def game_menu():
+    print("\t\t WELCOME MASTER")
+    print("SHAKE YOUR BRAIN AND ADD SOME CHALLENGING QUESTION..")
 
-    def add_question(self):
-        question_id = input("Enter question ID: ")
-        question_text = input("Enter the question: ")
-        options = input("Enter options separated by commas: ").split(',')
-        correct_answer = input("Enter correct answer: ")
+    print(f"\t\tMENU")
+    print(f"\tpress 1 for ADD Questions\n"
+          f"\tpress 2 for VIEW Questions\n"
+          f"\tpress 3 for DELETE questions\n"
+          f"\tpress 4 for exit")
+    operation = int(input("Which operations you want to perform :"))
+    if operation == 1:
+        question()
+        game_menu()
+    elif operation == 2:
+        view()
+        game_menu()
+    elif operation == 3:
+        dele_fun()
+        game_menu()
+    elif operation == 4:
+        print("EXIT")
+    else:
+        print("Enter valid choice")
+        game_menu()
 
-        self.questions[question_id] = {
-            'question': question_text,
-            'options': options,
-            'correct_answer': correct_answer
-        }
+def question():
+    global que_list
+    for i in range(1):
+        que_list = {}
+        que = input("Enter question :")
+        que_list[que] = {}
+        op_1 = input("Enter option-1 :")
+        op_2 = input("Enter option-2 :")
+        ans = input("Enter The right answer :")
+        que_list[que]["A"] = op_1
+        que_list[que]["B"] = op_2
+        que_list[que]["Right Answer"] = ans
+        temp = 1
+        f = open('question.txt', 'a')
+        for k in que_list.items():
+            temp = temp + 1
+            f.write(f"{temp}) {que} \nA :{op_1} \nB :{op_2} \nRIGHT ANS :{ans}\n")
+    return que_list
 
-        print("Question added successfully.")
+def view():
+    file = open("question.txt", "r")
+    while file:
+        line = file.readline()
+        print(line,end= "")
+        if line == "":
+            break
+    file.close()
 
-    def view_questions(self):
-        print("\n===== Questions =====")
-        for question_id, details in self.questions.items():
-            print(f"{question_id}. {details['question']}")
-            print(f"Options: {', '.join(details['options'])}")
-            print(f"Correct Answer: {details['correct_answer']}\n")
+def dele_fun():
+    desicion = input("are you sure you want to delete : ")
+    if(desicion == "yes"):
+        file=open("question.txt",'r+')
+        file.truncate()
+        print("You have successfully Deleted all data")
+    else:
+        print("Not deletd")
 
-    def delete_question(self):
-        question_id = input("Enter question ID to delete: ")
-        if question_id in self.questions:
-            confirmation = input(f"Are you sure you want to delete question {question_id}? (Y/N): ")
-            if confirmation.upper() == 'Y':
-                del self.questions[question_id]
-                print(f"Question {question_id} deleted successfully.")
-            else:
-                print("Deletion canceled.")
-        else:
-            print(f"Question with ID {question_id} not found.")
 
-    def play_game(self):
-        if not self.questions:
-            print("No questions available. Add questions before playing.")
-            return
+game_Title()
 
-        print("\n===== Quiz Game =====")
-        score = 0
-        for _ in range(3):  # Adjust the number of questions to play
-            question_id, details = random.choice(list(self.questions.items()))
-            print(details['question'])
-            for i, option in enumerate(details['options'], 1):
-                print(f"{i}. {option}")
-
-            user_answer = input("Your answer (1-{}): ".format(len(details['options'])))
-            if user_answer == details['correct_answer']:
-                print("Correct!\n")
-                score += 1
-            else:
-                print(f"Wrong! Correct answer: {details['correct_answer']}\n")
-
-        print(f"Your final score: {score}/3")
-
-    def save_data(self):
-        with open('quiz_log.txt', 'a') as log_file:
-            log_file.write("===== Quiz Log =====\n")
-            for question_id, details in self.questions.items():
-                log_file.write(f"Question ID: {question_id}\n")
-                log_file.write(f"Question: {details['question']}\n")
-                log_file.write(f"Options: {', '.join(details['options'])}\n")
-                log_file.write(f"Correct Answer: {details['correct_answer']}\n\n")
-
-    def main(self):
-        while True:
-            self.display_menu()
-            choice = input("Enter your choice (1-5): ")
-
-            if choice == '1':
-                self.add_question()
-            elif choice == '2':
-                self.view_questions()
-            elif choice == '3':
-                self.delete_question()
-            elif choice == '4':
-                self.play_game()
-            elif choice == '5':
-                self.save_data()
-                print("Thank you for using the Quiz Game Console Application. Exiting...")
-                break
-            else:
-                print("Invalid input. Please enter a number between 1 and 5.")
-
-if __name__ == "__main__":
-    quiz_game = QuizGame()
-    quiz_game.main()
